@@ -32,7 +32,9 @@ async function runSetup() {
     let conn;
     try {
         conn = await mysql.createConnection({
-            host:               env.DB_HOST     || 'localhost',
+            host: env.DB_HOST || 'localhost',
+            port: env.DB_PORT || 3306,
+            ssl: (env.DB_HOST && env.DB_HOST.includes('aivencloud.com')) ? { rejectUnauthorized: false } : undefined,
             user:               env.DB_USER     || 'root',
             password:           env.DB_PASSWORD || '',
             multipleStatements: true
