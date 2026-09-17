@@ -60,8 +60,12 @@ app.use((req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
 app.listen(PORT, () => {
     console.log('\n Server running at: http://localhost:' + PORT);
     console.log(' Frontend:          http://localhost:' + PORT + '/index.html');
     console.log(' API base:          http://localhost:' + PORT + '/api\n');
 });
+
+}
+module.exports = app;

@@ -294,13 +294,13 @@ exports.uploadProfilePhoto = async (req, res) => {
 
         // Build public URL — served by Express static /uploads
         const filename   = req.file.filename;
-        const publicUrl  = `/uploads/${filename}`;
+        const publicUrl  = req.file.path || `/uploads/${filename}`;
 
         // Delete old photo file if it exists
         const [rows] = await db.query('SELECT profile_picture FROM users WHERE id = ?', [userId]);
         if (rows[0]?.profile_picture) {
             const oldPath = path.join(__dirname, '..', rows[0].profile_picture);
-            if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+            if (!rows[0].profile_picture.startsWith('http') && fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
         }
 
         // Save new path in DB
