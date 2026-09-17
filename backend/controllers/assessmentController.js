@@ -82,7 +82,7 @@ exports.startAssessment = async (req, res) => {
             connection.release();
         }
         console.error(`[${req.requestId}] Start Assessment Error:`, error);
-        res.status(500).json({ message: 'Error starting assessment', error: error.message });
+        res.status(500).json({ message: 'Error starting assessment', error: 'Internal server error' });
     }
 };
 
@@ -136,7 +136,7 @@ exports.getAllQuestions = async (req, res) => {
 
     } catch (error) {
         console.error(`[${req.requestId}] Get Questions Error:`, error);
-        res.status(500).json({ message: 'Error fetching questions', error: error.message });
+        res.status(500).json({ message: 'Error fetching questions', error: 'Internal server error' });
     }
 };
 
@@ -193,7 +193,7 @@ exports.submitAnswer = async (req, res) => {
 
     } catch (error) {
         console.error(`[${req.requestId}] Submit Answer Error:`, error);
-        res.status(500).json({ message: 'Error saving answer', error: error.message });
+        res.status(500).json({ message: 'Error saving answer', error: 'Internal server error' });
     }
 };
 
@@ -271,7 +271,7 @@ exports.completeAssessment = async (req, res) => {
 
     } catch (error) {
         console.error(`[${req.requestId}] Complete Assessment Error:`, error);
-        res.status(500).json({ message: 'Error completing assessment', error: error.message });
+        res.status(500).json({ message: 'Error completing assessment', error: 'Internal server error' });
     }
 };
 
@@ -325,7 +325,7 @@ exports.getResults = async (req, res) => {
 
     } catch (error) {
         console.error(`[${req.requestId}] Get Results Error:`, error);
-        res.status(500).json({ message: 'Error fetching results', error: error.message });
+        res.status(500).json({ message: 'Error fetching results', error: 'Internal server error' });
     }
 };
 
@@ -383,7 +383,7 @@ exports.getProgress = async (req, res) => {
 
     } catch (error) {
         console.error(`[${req.requestId}] Get Progress Error:`, error);
-        res.status(500).json({ message: 'Error fetching progress', error: error.message });
+        res.status(500).json({ message: 'Error fetching progress', error: 'Internal server error' });
     }
 };
 
@@ -407,7 +407,7 @@ exports.getAssessmentHistory = async (req, res) => {
 
     } catch (error) {
         console.error(`[${req.requestId}] History Error:`, error);
-        res.status(500).json({ message: 'Error fetching history', error: error.message });
+        res.status(500).json({ message: 'Error fetching history', error: 'Internal server error' });
     }
 };// ============================================================
 // 8. CREATE REDO REQUEST
@@ -482,7 +482,7 @@ exports.createRedoRequest = async (req, res) => {
 
     } catch (error) {
         console.error('[' + req.requestId + '] Create Redo Request Error:', error);
-        res.status(500).json({ message: 'Error submitting redo request.', error: error.message });
+        res.status(500).json({ message: 'Error submitting redo request.', error: 'Internal server error' });
     }
 };
 
@@ -519,7 +519,7 @@ exports.getRedoRequestStatus = async (req, res) => {
 
     } catch (error) {
         console.error('[' + req.requestId + '] Get Redo Request Status Error:', error);
-        res.status(500).json({ message: 'Error fetching redo request status.', error: error.message });
+        res.status(500).json({ message: 'Error fetching redo request status.', error: 'Internal server error' });
     }
 };
 

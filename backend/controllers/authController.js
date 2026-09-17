@@ -38,7 +38,7 @@ exports.registerUser = async (req, res) => {
 
     } catch (error) {
         console.error(`[${req.requestId}] Register Error:`, error);
-        res.status(500).json({ message: 'Registration failed. Please try again.', error: error.message });
+        res.status(500).json({ message: 'Registration failed. Please try again.', error: 'Internal server error' });
     }
 };
 
@@ -90,7 +90,7 @@ exports.loginUser = async (req, res) => {
 
     } catch (error) {
         console.error(`[${req.requestId}] Login Error:`, error);
-        res.status(500).json({ message: 'Login failed. Please try again.', error: error.message });
+        res.status(500).json({ message: 'Login failed. Please try again.', error: 'Internal server error' });
     }
 };
 
@@ -221,7 +221,7 @@ exports.getUserProfile = async (req, res) => {
 
     } catch (error) {
         console.error(`[${req.requestId}] Get Profile Error:`, error);
-        res.status(500).json({ message: 'Error fetching profile.', error: error.message });
+        res.status(500).json({ message: 'Error fetching profile.', error: 'Internal server error' });
     }
 };
 
@@ -242,7 +242,7 @@ exports.updateProfile = async (req, res) => {
 
     } catch (error) {
         console.error(`[${req.requestId}] Update Profile Error:`, error);
-        res.status(500).json({ message: 'Error updating profile.', error: error.message });
+        res.status(500).json({ message: 'Error updating profile.', error: 'Internal server error' });
     }
 };
 
@@ -277,7 +277,7 @@ exports.changePassword = async (req, res) => {
 
     } catch (error) {
         console.error(`[${req.requestId}] Change Password Error:`, error);
-        res.status(500).json({ message: 'Error changing password.', error: error.message });
+        res.status(500).json({ message: 'Error changing password.', error: 'Internal server error' });
     }
 };
 
@@ -313,6 +313,6 @@ exports.uploadProfilePhoto = async (req, res) => {
 
     } catch (error) {
         console.error(`[${req.requestId}] Upload Photo Error:`, error);
-        res.status(500).json({ message: 'Error uploading photo.', error: error.message });
+        res.status(500).json({ message: 'Error uploading photo.', error: 'Internal server error' });
     }
 };

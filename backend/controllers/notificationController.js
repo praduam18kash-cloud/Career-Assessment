@@ -1,6 +1,6 @@
-﻿const db = require('../config/db');
+const db = require('../config/db');
 
-// ── User notifications ──────────────────────────────────
+// -- User notifications ----------------------------------
 exports.getUserNotifications = async (req, res) => {
     try {
         const [notifications] = await db.query(
@@ -10,7 +10,7 @@ exports.getUserNotifications = async (req, res) => {
         const unreadCount = notifications.filter(n => !n.is_read).length;
         res.status(200).json({ notifications, unreadCount });
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching notifications', error: error.message });
+        res.status(500).json({ message: 'Error fetching notifications', error: 'Internal server error' });
     }
 };
 
@@ -22,7 +22,7 @@ exports.markUserRead = async (req, res) => {
         );
         res.status(200).json({ message: 'Marked as read.' });
     } catch (error) {
-        res.status(500).json({ message: 'Error updating notification', error: error.message });
+        res.status(500).json({ message: 'Error updating notification', error: 'Internal server error' });
     }
 };
 
@@ -34,11 +34,11 @@ exports.markUserAllRead = async (req, res) => {
         );
         res.status(200).json({ message: 'All marked as read.' });
     } catch (error) {
-        res.status(500).json({ message: 'Error updating notifications', error: error.message });
+        res.status(500).json({ message: 'Error updating notifications', error: 'Internal server error' });
     }
 };
 
-// ── Admin notifications ─────────────────────────────────
+// -- Admin notifications ---------------------------------
 exports.getAdminNotifications = async (req, res) => {
     try {
         const [notifications] = await db.query(
@@ -48,7 +48,7 @@ exports.getAdminNotifications = async (req, res) => {
         const unreadCount = notifications.filter(n => !n.is_read).length;
         res.status(200).json({ notifications, unreadCount });
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching notifications', error: error.message });
+        res.status(500).json({ message: 'Error fetching notifications', error: 'Internal server error' });
     }
 };
 
@@ -60,7 +60,7 @@ exports.markAdminRead = async (req, res) => {
         );
         res.status(200).json({ message: 'Marked as read.' });
     } catch (error) {
-        res.status(500).json({ message: 'Error updating notification', error: error.message });
+        res.status(500).json({ message: 'Error updating notification', error: 'Internal server error' });
     }
 };
 
@@ -72,6 +72,6 @@ exports.markAdminAllRead = async (req, res) => {
         );
         res.status(200).json({ message: 'All marked as read.' });
     } catch (error) {
-        res.status(500).json({ message: 'Error updating notifications', error: error.message });
+        res.status(500).json({ message: 'Error updating notifications', error: 'Internal server error' });
     }
 };

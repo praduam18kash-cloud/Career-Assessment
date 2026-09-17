@@ -35,7 +35,7 @@ exports.registerAdmin = async (req, res) => {
 
     } catch (error) {
         console.error('Admin Register Error:', error);
-        res.status(500).json({ message: 'Server error during admin registration.', error: error.message });
+        res.status(500).json({ message: 'Server error during admin registration.', error: 'Internal server error' });
     }
 };
 
@@ -84,7 +84,7 @@ exports.adminLogin = async (req, res) => {
 
     } catch (error) {
         console.error('Admin Login Error:', error);
-        res.status(500).json({ message: 'Server error during admin login', error: error.message });
+        res.status(500).json({ message: 'Server error during admin login', error: 'Internal server error' });
     }
 };
 
@@ -119,7 +119,7 @@ exports.addQuestion = async (req, res) => {
         });
     } catch (error) {
         console.error('Add Question Error:', error);
-        res.status(500).json({ message: 'Failed to add question.', error: error.message });
+        res.status(500).json({ message: 'Failed to add question.', error: 'Internal server error' });
     }
 };
 
@@ -137,7 +137,7 @@ exports.getAllQuestions = async (req, res) => {
         res.status(200).json({ total: questions.length, questions });
     } catch (error) {
         console.error('Fetch Questions Error:', error);
-        res.status(500).json({ message: 'Failed to fetch questions.', error: error.message });
+        res.status(500).json({ message: 'Failed to fetch questions.', error: 'Internal server error' });
     }
 };
 
@@ -170,7 +170,7 @@ exports.addCareer = async (req, res) => {
         });
     } catch (error) {
         console.error('Add Career Error:', error);
-        res.status(500).json({ message: 'Failed to add career.', error: error.message });
+        res.status(500).json({ message: 'Failed to add career.', error: 'Internal server error' });
     }
 };
 
@@ -184,7 +184,7 @@ exports.getAllCareers = async (req, res) => {
         res.status(200).json({ total: careers.length, careers });
     } catch (error) {
         console.error('Fetch Careers Error:', error);
-        res.status(500).json({ message: 'Failed to fetch careers.', error: error.message });
+        res.status(500).json({ message: 'Failed to fetch careers.', error: 'Internal server error' });
     }
 };
 
@@ -204,7 +204,7 @@ exports.getAllUsers = async (req, res) => {
         });
     } catch (error) {
         console.error('Fetch All Users Error:', error);
-        res.status(500).json({ message: 'Failed to fetch users.', error: error.message });
+        res.status(500).json({ message: 'Failed to fetch users.', error: 'Internal server error' });
     }
 };
 
@@ -245,7 +245,7 @@ exports.updateQuestion = async (req, res) => {
         res.status(200).json({ message: 'Question updated successfully!' });
     } catch (error) {
         console.error('Update Question Error:', error);
-        res.status(500).json({ message: 'Failed to update question.', error: error.message });
+        res.status(500).json({ message: 'Failed to update question.', error: 'Internal server error' });
     }
 };
 
@@ -266,7 +266,7 @@ exports.deleteQuestion = async (req, res) => {
         res.status(200).json({ message: 'Question deleted successfully!' });
     } catch (error) {
         console.error('Delete Question Error:', error);
-        res.status(500).json({ message: 'Failed to delete question.', error: error.message });
+        res.status(500).json({ message: 'Failed to delete question.', error: 'Internal server error' });
     }
 };
 
@@ -296,7 +296,7 @@ exports.updateCareer = async (req, res) => {
         res.status(200).json({ message: 'Career updated successfully!' });
     } catch (error) {
         console.error('Update Career Error:', error);
-        res.status(500).json({ message: 'Failed to update career.', error: error.message });
+        res.status(500).json({ message: 'Failed to update career.', error: 'Internal server error' });
     }
 };
 
@@ -317,7 +317,7 @@ exports.deleteCareer = async (req, res) => {
         res.status(200).json({ message: 'Career deleted successfully!' });
     } catch (error) {
         console.error('Delete Career Error:', error);
-        res.status(500).json({ message: 'Failed to delete career.', error: error.message });
+        res.status(500).json({ message: 'Failed to delete career.', error: 'Internal server error' });
     }
 };
 
@@ -330,7 +330,7 @@ exports.getAllCategories = async (req, res) => {
         res.status(200).json({ total: categories.length, categories });
     } catch (error) {
         console.error('Fetch Categories Error:', error);
-        res.status(500).json({ message: 'Failed to fetch categories.', error: error.message });
+        res.status(500).json({ message: 'Failed to fetch categories.', error: 'Internal server error' });
     }
 };// ==========================================
 // 14. GET REDO REQUESTS (Admin)
@@ -343,7 +343,7 @@ exports.getAllRedoRequests = async (req, res) => {
         res.status(200).json({ requests });
     } catch (error) {
         console.error('[' + req.requestId + '] Get All Redo Requests Error:', error);
-        res.status(500).json({ message: 'Failed to fetch redo requests.', error: error.message });
+        res.status(500).json({ message: 'Failed to fetch redo requests.', error: 'Internal server error' });
     }
 };
 
@@ -401,7 +401,7 @@ exports.approveRedoRequest = async (req, res) => {
     } catch (error) {
         if (connection) { await connection.rollback(); connection.release(); }
         console.error('[' + req.requestId + '] Approve Redo Request Error:', error);
-        res.status(500).json({ message: 'Failed to approve request.', error: error.message });
+        res.status(500).json({ message: 'Failed to approve request.', error: 'Internal server error' });
     }
 };
 
@@ -440,7 +440,7 @@ exports.rejectRedoRequest = async (req, res) => {
 
     } catch (error) {
         console.error('[' + req.requestId + '] Reject Redo Request Error:', error);
-        res.status(500).json({ message: 'Failed to reject request.', error: error.message });
+        res.status(500).json({ message: 'Failed to reject request.', error: 'Internal server error' });
     }
 };
 
@@ -579,7 +579,7 @@ exports.getAdminAnalytics = async (req, res) => {
 
     } catch (error) {
         console.error('Admin Analytics Error:', error);
-        res.status(500).json({ message: 'Server error while fetching analytics', error: error.message });
+        res.status(500).json({ message: 'Server error while fetching analytics', error: 'Internal server error' });
     }
 };
 
