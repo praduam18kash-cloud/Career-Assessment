@@ -1,4 +1,4 @@
-const bcrypt    = require('bcrypt');
+const bcrypt    = require('bcryptjs');
 const jwt       = require('jsonwebtoken');
 const path      = require('path');
 const fs        = require('fs');
@@ -37,8 +37,8 @@ exports.registerUser = async (req, res) => {
         res.status(201).json({ message: 'Registration successful! Please log in.' });
 
     } catch (error) {
-        console.error(`[${req.requestId}] Register Error:`, error);
-        res.status(500).json({ message: 'Registration failed. Please try again.', error: 'Internal server error' });
+        require('fs').writeFileSync('err_log.txt', String(error) + '\n' + error.stack); console.error(`[${req.requestId}] Register Error:`, error);
+        res.status(500).json({ message: 'Registration failed. Please try again.', error: error.message, stack: error.stack });
     }
 };
 
