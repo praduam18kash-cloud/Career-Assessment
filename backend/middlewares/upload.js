@@ -26,7 +26,7 @@ if (process.env.CLOUDINARY_CLOUD_NAME) {
 } else {
     storage = multer.diskStorage({
         destination: (req, file, cb) => {
-            const dir = process.env.UPLOAD_DIR || './uploads';
+            const dir = process.env.VERCEL ? '/tmp/uploads' : (process.env.UPLOAD_DIR || './uploads');
             try { if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true }); } catch(e) {}
             cb(null, dir);
         },

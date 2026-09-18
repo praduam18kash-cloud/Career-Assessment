@@ -14,7 +14,7 @@ const requestId        = require('./middlewares/requestId');
 const app = express();
 
 // Uploads dir
-const uploadDir = process.env.UPLOAD_DIR || './uploads';
+const uploadDir = process.env.VERCEL ? '/tmp/uploads' : (process.env.UPLOAD_DIR || './uploads');
 try { if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true }); } catch(e) {}
 
 // CORS
@@ -37,7 +37,7 @@ app.use(cookieParser());
 app.use(requestId);
 
 // Static files
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(uploadDir));
 app.use(express.static(path.join(__dirname, '..', 'html-frontend')));
 
 // API routes

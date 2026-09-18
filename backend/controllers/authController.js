@@ -294,13 +294,21 @@ exports.uploadProfilePhoto = async (req, res) => {
 
         // Build public URL — served by Express static /uploads
         const filename   = req.file.filename;
-        const publicUrl  = req.file.path || `/uploads/${filename}`;
+        const publicUrl = (req.file.path && req.file.path.startsWith('http')) ? req.file.path : `/uploads/${filename}`;
 
-        // Delete old photo file if it exists
+        // Delete old photo file if it exists (wrap in try-catch for Vercel ephemeral FS safety)
         const [rows] = await db.query('SELECT profile_picture FROM users WHERE id = ?', [userId]);
         if (rows[0]?.profile_picture) {
-            const oldPath = path.join(__dirname, '..', rows[0].profile_picture);
-            if (!rows[0].profile_picture.startsWith('http') && fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+            try {
+                if (!rows[0].profile_picture.startsWith('http')) {
+                    // Extract just the filename to find it in the current upload directory
+                    const oldFilename = path.basename(rows[0].profile_picture);
+                    const oldPath = process.env.VERCEL ? path.join('/tmp/uploads', oldFilename) : path.join(__dirname, '..', 'uploads', oldFilename);
+                    if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+                }
+            } catch (fsError) {
+                // Ignore unlink errors on serverless environments
+            }
         }
 
         // Save new path in DB
