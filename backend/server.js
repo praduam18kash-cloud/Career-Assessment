@@ -15,7 +15,7 @@ const app = express();
 
 // Uploads dir
 const uploadDir = process.env.UPLOAD_DIR || './uploads';
-if (!process.env.VERCEL && !fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+try { if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true }); } catch(e) {}
 
 // CORS
 app.use(cors({
