@@ -43,6 +43,15 @@
         }
         .btn-outline-custom:hover { background: #f8fafc; border-color: #94a3b8; color: #1e293b; }
         textarea { border-radius: 10px !important; resize: none; }
+            @media (max-width: 768px) {
+            .content { padding: 20px 16px; padding-top: 3vh; display: block; }
+            .redo-card { padding: 24px 20px; }
+            .icon-wrapper { width: 56px; height: 56px; font-size: 24px; margin-bottom: 16px; }
+            .redo-title { font-size: 1.25rem; }
+            .redo-header { margin-bottom: 20px; }
+            .alert-warning-custom { padding: 12px; margin-bottom: 20px; font-size: 0.85rem; }
+            #reason { height: 100px; min-height: 100px; }
+        }
     </style>
 </head>
 <body>
@@ -62,7 +71,7 @@
         </nav>
     </aside>
 
-    <main class="main-content">
+    <main class="main">
         <header class="topbar">
             <div class="topbar-left">
                 <button class="menu-btn" onclick="openSidebar()"><i class="bi bi-list"></i></button>
