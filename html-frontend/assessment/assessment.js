@@ -39,7 +39,7 @@ let bookmarked    = new Set();
 let currentIndex  = 0;
 let timerInterval = null;
 let startTime     = null;
-let isSaving      = false;
+let saveQueue = Promise.resolve();
 
 // ── Init ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
@@ -125,7 +125,7 @@ function buildAllGrids() {
             btn.title       = `Question ${globalIdx + 1}`;
             btn.dataset.qid = q.id;
             btn.dataset.idx = globalIdx;
-            btn.addEventListener('click', () => renderQuestion(globalIdx));
+            // Removed click listener to strictly enforce sequential navigation via Next/Prev
             grid.appendChild(btn);
         });
     });
@@ -300,17 +300,24 @@ async function handleOptionClick(optionIndex) {
     updateGridStates();
     updateOverallProgress();
 
-    // Save to backend (non-blocking)
-    if (!isSaving) {
-        isSaving = true;
+    // Save to backend using queue to guarantee no answers are dropped
+    saveQueue = saveQueue.then(() => 
         apiPost('/assessments/submit-answer', { questionId: q.id, selectedOption: option })
-            .catch(() => showToast('Answer not saved — check connection.', 'error'))
-            .finally(() => { isSaving = false; });
-    }
+    ).catch(() => {
+        showToast('Answer not saved — check connection.', 'error');
+    });
 }
 
 // ── Navigation ────────────────────────────────────────────────
 function nextQuestion() {
+    const q = allQuestions[currentIndex];
+    
+    // STRICT SEQUENTIAL: Prevent skipping unanswered questions
+    if (!answeredMap[q.id]) {
+        showToast('Please select an answer before proceeding to the next question.', 'error');
+        return;
+    }
+
     if (currentIndex < allQuestions.length - 1) {
         renderQuestion(currentIndex + 1);
     } else {
@@ -332,10 +339,18 @@ function toggleBookmark() {
 function markReview() { toggleBookmark(); }
 
 // ── Save & Exit (replaces Exit) ───────────────────────────────
-function saveAndExit() {
-    // Progress is already auto-saved on every answer — just navigate away
+async function saveAndExit() {
+    showToast('Saving progress...', 'info');
+    
+    // Await any pending background saves to prevent race condition
+    try {
+        await saveQueue;
+    } catch (err) {
+        console.error("Save error during exit:", err);
+    }
+    
     showToast('Progress saved! Returning to dashboard...', 'success');
-    setTimeout(() => { window.location.href = '../dashboard/dashboard.html'; }, 1000);
+    setTimeout(() => { window.location.href = '../dashboard/dashboard.html'; }, 800);
 }
 
 // ── Kept for compatibility but no longer called by UI ─────────
@@ -355,6 +370,13 @@ async function submitAssessment() {
 
     const nextBtn = document.getElementById('nextBtn');
     if (nextBtn) setLoading(nextBtn, true);
+
+    // Await any pending background saves for the final questions
+    try {
+        await saveQueue;
+    } catch (err) {
+        console.error("Save error before submit:", err);
+    }
 
     const res = await apiPost('/assessments/complete');
     if (res && res.ok) {
