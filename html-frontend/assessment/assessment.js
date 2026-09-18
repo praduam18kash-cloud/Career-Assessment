@@ -283,6 +283,8 @@ function updateOverallProgress() {
     if (countEl)     countEl.textContent     = `${answeredCount} / ${total}`;
 }
 
+let lastSaveError = null;
+
 // ── Option click handler ──────────────────────────────────────
 async function handleOptionClick(optionIndex) {
     const q      = allQuestions[currentIndex];
@@ -301,9 +303,15 @@ async function handleOptionClick(optionIndex) {
     updateOverallProgress();
 
     // Save to backend using queue to guarantee no answers are dropped
-    saveQueue = saveQueue.then(() => 
-        apiPost('/assessments/submit-answer', { questionId: q.id, selectedOption: option })
-    ).catch(() => {
+    saveQueue = saveQueue.then(async () => {
+        lastSaveError = null;
+        const res = await apiPost('/assessments/submit-answer', { questionId: q.id, selectedOption: option });
+        if (!res || !res.ok) {
+            lastSaveError = new Error(res?.data?.message || 'Failed to save');
+            showToast('Answer not saved — check connection.', 'error');
+        }
+    }).catch(err => {
+        lastSaveError = err;
         showToast('Answer not saved — check connection.', 'error');
     });
 }
@@ -340,17 +348,33 @@ function markReview() { toggleBookmark(); }
 
 // ── Save & Exit (replaces Exit) ───────────────────────────────
 async function saveAndExit() {
-    showToast('Saving progress...', 'info');
+    const btn = document.querySelector('.btn-exit');
     
-    // Await any pending background saves to prevent race condition
-    try {
-        await saveQueue;
-    } catch (err) {
-        console.error("Save error during exit:", err);
+    // Prevent double clicks
+    if (btn && btn.disabled) return;
+    
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" style="width:1rem;height:1rem;"></span>Saving...';
+    } else {
+        showToast('Saving progress...', 'info');
     }
     
-    showToast('Progress saved! Returning to dashboard...', 'success');
-    setTimeout(() => { window.location.href = '../dashboard/dashboard.html'; }, 800);
+    // Await any pending background saves to prevent race condition
+    await saveQueue;
+    
+    // If the API explicitly failed, abort navigation and let user retry
+    if (lastSaveError) {
+        showToast('Save failed. Please check your connection and try again.', 'error');
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-save2"></i> Save & Exit';
+        }
+        return;
+    }
+    
+    // Success: navigate immediately based on actual successful save
+    window.location.href = '../dashboard/dashboard.html';
 }
 
 // ── Kept for compatibility but no longer called by UI ─────────
