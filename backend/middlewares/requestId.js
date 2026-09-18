@@ -1,8 +1,8 @@
-const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
 
 const requestIdMiddleware = (req, res, next) => {
     // Check if the client sent an existing request ID, otherwise generate a new UUID
-    const requestId = req.headers['x-request-id'] || uuidv4();
+    const requestId = req.headers['x-request-id'] || crypto.randomUUID();
 
     // Attach the request ID to the request object so it's accessible across the lifecycle
     req.requestId = requestId;
